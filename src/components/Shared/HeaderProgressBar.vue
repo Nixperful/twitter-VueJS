@@ -1,11 +1,11 @@
 <template>
     <div class="row">
         <div class="col-sm-12">
-            <h3> Number of Quotes</h3>
-            <div class="progress">
+            <h3> Number of Tweets</h3>
+            <div class="progress" >
                 <div class="progress-bar" role="progressbar" 
                 aria-valuenow="60" aria-valuemin="0"
-                aria-valuemax="100" :style="{width:(quoteCount/maxQuotes)*100 + '%'}">
+                aria-valuemax="100" :style="{width:(quoteCount/maxQuotes)*100 + '%'}" >
                     {{quoteCount}}/{{maxQuotes}}
                 </div>
             </div>

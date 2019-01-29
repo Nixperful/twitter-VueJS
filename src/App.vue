@@ -1,93 +1,72 @@
 <template>
-    <div class='container'>
-        <app-header :max-quotes="maxQuotes" :quote-count="quoteList.length"></app-header>
-        <user-quote @newQuoteAdded="addQuote"></user-quote>
-        <quote-area :quotes="quoteList" @quoteDeleted="eraseQuote"></quote-area>
+    <div class="container">
         <div class="row">
-            <div class="col-sm-12 text-center">
-                <div class="alert alert-info">Information: Click on a Quote to delete it </div>
+            <div class="col-xs-12 col-sm-8  col-md-6">
+                <h2 style="font-family:'Times New Roman', Times, serif">Welcome to your Favorite App!</h2>
+                <hr>
+                <router-view name="header-top"></router-view>
+                <transition name= "slide" mode="out-in">
+                    <router-view></router-view>
+                </transition>
+                <hr>
+                <router-view name="header-bottom"></router-view>
             </div>
         </div>
-        <hr>
-        <button class="btn btn-primary" @click="getData">Get Server Data</button>
-    
-    </div> 
+    </div>
 </template>
 
-<script>
-    import QuoteArea from './components/Quotes/QuoteArea.vue'
-    import NewQuote from './components/Quotes/NewQuote.vue'
-    import HeaderProgressBar from './components/Shared/HeaderProgressBar.vue' 
-    export default {
-        data: function(){
-            return {
-                quoteList:[],
-                maxQuotes:10,
-                node:'tweets',
-                index:0
-            }
-        },
-        components:{
-            'quote-area':QuoteArea,
-            'user-quote':NewQuote,
-            'app-header':HeaderProgressBar        
-        },
-        methods:{
-            addQuote(quote){
-                var me= this;
-                if(!(this.quoteList.length>=this.maxQuotes)){
-                    
-                    this.resource.addQuote({node:this.node},{"tweet": {"title": quote.title, "body":quote.body}})
-                    .then(function(data){
-                        console.log(data);
-                        me.getData();
-                    });
-                    
-                }  
-                else{alert("Delete yout Quotes, you reach the free limit")}              
-            },
-            eraseQuote(index){
-                var me= this;
-                this.index=index;
-                this.resource.deleteData({index:this.index})
-                .then(function(){
-                    me.getData();   
-                });
-               
-            },
-            getData(){
-                this.resource.getData({ node:this.node}) 
-                    .then(response => {
-                        return response.json();
-                    })
-                    .then(data =>{
-                        const resultArray=[];
-                        for (let key in data){
-                            resultArray.push(data[key]);
-                        }
-                        this.quoteList = resultArray[0];
-                    }) ;
-            }
-        },
-        created(){
-            
-            const customActions={
-                //saveAlt: {method: 'POST',  url: 'alternative.json'},
-                addQuote: {method: 'POST', headers:{
-                    Authorization: "Bearer dc431c3980eede8c781bae0c42f150e5",
-                }},
-                getData: {method: 'GET'} ,
-                deleteData: {method:'DELETE', headers:{
-                    Authorization: "Bearer dc431c3980eede8c781bae0c42f150e5"
-                }, url:"tweets/{index}"
 
-                }   
-            };
-            this.resource= this.$resource('{node}.json',{},customActions);
-            this.getData();
-        }
+
+<script>
+
+    export default {
+
     } 
 </script>
 
+
 <style>
+    .slide-leave-active{
+        transition: opacity 1s ease;
+        opacity:0;
+        animation: slide-out 1s ease-out forwards;
+    }
+    .slide-leave{
+        opacity:1;
+        transform: translateX(0);
+    }
+    .slide-enter-active{
+        animation: slide-in 1s ease-out forwards;
+    }
+    @keyframes slide-out {
+        0%{
+            transform: translateY(0);
+        }
+        100%{
+            transform: translateY(-15px)
+        }  
+    }
+    @keyframes slide-in {
+        0%{
+            transform: translateY(-15px);
+        }
+        100%{
+            transform: translateY(0);
+        }  
+    }
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
